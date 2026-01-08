@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Παιχνίδι Πλακωτό - ΑΔΙΣΕ">
+  <meta name="author" content="">
+  <title>ΑΔΙΣΕ: Πλακωτό</title>
+
+  <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+  <link href="css/backgammon.css" rel="stylesheet"> 
+  
+  <script src="bootstrap/jquery-3.2.1.min.js"></script>
+  <script src="bootstrap/bootstrap.min.js"></script>
+  <script src="js/plakoto.js"></script>
+
+  <link href="jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container text-center">
+    <h1 class="mt-4">ΠΛΑΚΩΤΟ</h1>
+    
+    <div id='backgammon_board' class="mx-auto">
+    </div>
+
+    <div id='dice_area' class="my-3">
+        <span id='dice1' class="badge badge-secondary" style="font-size: 2em;">-</span>
+        <span id='dice2' class="badge badge-secondary" style="font-size: 2em;">-</span>
+        <button id='roll_dice' class='btn btn-success ml-2'>ΡΙΞΕ ΖΑΡΙΑ</button>
+    </div>
+
+    <div id='game_initializer' class="card p-3 my-3">
+      <h3>Σύνδεση Παίκτη</h3>
+      <div class="form-inline justify-content-center">
+        <input id='username' class="form-control mr-2" placeholder="Όνομα Χρήστη"> 
+        <select id='pcolor' class="form-control mr-2">
+            <option value='W'>Λευκά (W)</option>
+            <option value='B'>Μαύρα (B)</option>
+        </select>
+        <button id='plakoto_login' class='btn btn-primary'>ΕΙΣΟΔΟΣ ΣΤΟ ΠΑΙΧΝΙΔΙ</button>
+      </div>
+    </div>
+    
+    <div id='game_info' class="alert alert-info">
+        Περιμένοντας παίκτες...
+    </div>
+
+    <div id='move_div' class="card p-3 my-3">
+      <h4>Κίνηση Πουλιού</h4>
+      <div class="form-inline justify-content-center">
+        Από Θέση (1-24): <input type="number" id='the_move_src' class="form-control mx-2" min="1" max="24" style="width: 80px;">
+        Προς Θέση: 
+        <select id='the_move_dest' class="form-control mx-2">
+            </select>
+        <button id='do_move' class='btn btn-primary'>ΚΑΝΕ ΤΗΝ ΚΙΝΗΣΗ</button>
+      </div>
+    </div>  
+
+    <div class="mb-5">
+        <button id='refresh_board' class='btn btn-info'>Ανανέωση Ταμπλό</button>
+        <button id='plakoto_reset' class='btn btn-warning'>Επανεκκίνηση Παιχνιδιού</button>
+    </div>
+  </div>
+
+</body>
+</html>
