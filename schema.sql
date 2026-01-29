@@ -1,5 +1,3 @@
-
-
 DROP TABLE IF EXISTS `board`;
 CREATE TABLE `board` (
   `pos` tinyint(4) NOT NULL,          
