@@ -9,7 +9,7 @@
 //  	$res = $st->get_result();
 //  	header('Content-type: application/json'); //Στέλνει μια κεφαλίδα HTTP στον browser (ή στον πελάτη) ενημερώνοντάς τον ότι τα δεδομένα που ακολουθούν είναι σε μορφή JSON και όχι σε απλή HTML.
 //  	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
-// }
+// 
 // Lecture 4 modified
 function show_board($input) {
 	global $mysqli;
