@@ -3,7 +3,7 @@ var game_status = {};
 var board = {};
 
 $(function() {
-    draw_empty_board('W');
+    //  draw_empty_board('W'); kolitsis
     fill_board();
 
     $('#plakoto_reset').click(reset_board);
@@ -43,12 +43,12 @@ function move_result(data) {
     $('#the_move_dest').html('');
 }
 
-function draw_empty_board(p) {
+/* function draw_empty_board(p) {
     
-    var t = '<div id="plakoto_table" class="container">';
+     var t = '<div id="plakoto_table" class="container">';
     
     
-    t += '<div class="row board_row">';
+     t += '<div class="row board_row">';
     for(var j=13; j<=24; j++) {
         t += '<div class="plakoto_point col" id="pos_' + j + '"><small>' + j + '</small><div class="stack"></div></div>';
     }
@@ -64,7 +64,8 @@ function draw_empty_board(p) {
     t += '</div>';
     $('#backgammon_board').html(t);
     $('.plakoto_point').click(click_on_point);
-}
+} 
+  kolitsis:  gia na kano to css p thelo leei de xreiazetai  to svinoume olo      */  
 
 function fill_board() {
     $.ajax({    
@@ -75,7 +76,7 @@ function fill_board() {
     });
 }
 
-function fill_board_by_data(data) {
+/* function fill_board_by_data(data) {
     board = data;
     
     $('.stack').html('');
@@ -84,6 +85,30 @@ function fill_board_by_data(data) {
         var o = data[i];
         var id = '#pos_' + o.pos + ' .stack';
         var color_class = (o.piece_color == 'W') ? 'white_piece' : 'black_piece';
+        
+        $(id).append('<div class="piece ' + color_class + '"></div>');
+    }
+
+    if(me.piece_color != null && game_status.p_turn == me.piece_color) {
+        $('#move_div').show(500);
+    } else {
+        $('#move_div').hide(500);
+    }
+} kolitsis: palia  fill board by data , grammes 100-121
+*/
+
+function fill_board_by_data(data) {
+    board = data;
+    
+    // Καθαρισμός
+    $('.board-slot').html('');
+
+    for(var i=0; i<data.length; i++) {
+        var o = data[i];
+        var id = '#pos_' + o.pos; 
+        
+        // ΑΛΛΑΓΗ ΕΔΩ: Αν δεν είναι Λευκό ('W'), τότε είναι Πράσινο
+        var color_class = (o.piece_color == 'W') ? 'white_piece' : 'green_piece';
         
         $(id).append('<div class="piece ' + color_class + '"></div>');
     }
