@@ -1,5 +1,6 @@
 <?php
 
+
 require_once "lib/game.php";
 
 function handle_user($method, $b,$input) {

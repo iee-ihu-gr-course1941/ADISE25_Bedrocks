@@ -1,6 +1,7 @@
 <?php
 
-//Almost same with the show_board...
+//Almost same with the show_board
+
 function show_status() {
   global $mysqli;
 	
