@@ -35,7 +35,7 @@ function reset_board() {
 function move_piece($from, $to, $token) {
     global $mysqli;
     
-    // 1. Βρες Χρώμα Παίκτη
+    // 1. Βρες Χρώμα Παίκτη και Έλεγξε το Token
     $sql = "SELECT piece_color FROM players WHERE token=?";
     $st = $mysqli->prepare($sql);
     $st->bind_param('s',$token);
@@ -48,36 +48,45 @@ function move_piece($from, $to, $token) {
         print json_encode(['errormesg'=>"Token invalid"]); return;
     }
 
-    // 2. Έλεγχος Σειράς
+    // 2. Έλεγχος Σειράς (Ποιος παίζει)
     $status = $mysqli->query("SELECT p_turn FROM game_status")->fetch_assoc()['p_turn'];
     if($status != $color) {
         header("HTTP/1.1 400 Bad Request");
         print json_encode(['errormesg'=>"Δεν είναι η σειρά σου"]); return;
     }
 
-    // 3. Βρες το ΔΙΚΟ ΣΟΥ πούλι που είναι ΠΑΝΩ-ΠΑΝΩ (μεγαλύτερο ID)
-    // Στο Πλακωτό κουνιέται μόνο το πάνω πούλι της στήλης.
-    $sql = "SELECT id, piece_color FROM board WHERE pos=? ORDER BY id DESC LIMIT 1";
+    // 3. Βρες αν υπάρχει πούλι δικό σου στην αφετηρία
+    // Δεν μας νοιάζει το ID πλέον, αρκεί να υπάρχει ΕΝΑ πούλι
+    $sql = "SELECT count(*) as c FROM board WHERE pos=? AND piece_color=?";
     $st = $mysqli->prepare($sql);
-    $st->bind_param('i',$from);
+    $st->bind_param('is', $from, $color);
     $st->execute();
-    $piece = $st->get_result()->fetch_assoc();
+    $count = $st->get_result()->fetch_assoc()['c'];
 
-    if(!$piece || $piece['piece_color'] != $color) {
+    if($count == 0) {
         header("HTTP/1.1 400 Bad Request");
-        print json_encode(['errormesg'=>"Δεν υπάρχει πούλι δικό σου στην κορυφή της θέσης $from"]); return;
+        print json_encode(['errormesg'=>"Δεν έχεις πούλι στη θέση $from"]); return;
     }
 
-    // 4. Update θέσης (Μετακίνηση)
-    // Στο Πλακωτό απλά αλλάζουμε το pos. Το ID μένει ίδιο (και αφού μετακινηθεί,
-    // αν υπήρχε άλλο πούλι εκεί, αυτό θα έχει μεγαλύτερο ID άρα θα μπει από πάνω).
+    // --- ΕΔΩ ΕΙΝΑΙ Η ΑΛΛΑΓΗ ---
     
-    $sql = "UPDATE board SET pos=? WHERE id=?";
+    // 4. "Σήκωσε" το πούλι (ΔΙΑΓΡΑΦΗ)
+    // Σβήνουμε το τελευταίο (πάνω-πάνω) πούλι από την παλιά θέση
+    $sql = "DELETE FROM board WHERE pos=? AND piece_color=? ORDER BY id DESC LIMIT 1";
     $st = $mysqli->prepare($sql);
-    $st->bind_param('ii', $to, $piece['id']);
+    $st->bind_param('is', $from, $color);
     $st->execute();
 
-    // 5. Αλλαγή σειράς (Προσωρινά αυτόματα για να παίξεις)
+    // 5. "Άσε" το πούλι (ΕΙΣΑΓΩΓΗ)
+    // Βάζουμε νέο πούλι στη νέα θέση. Θα πάρει νέο AUTO_INCREMENT ID.
+    $sql = "INSERT INTO board (pos, piece_color) VALUES (?,?)";
+    $st = $mysqli->prepare($sql);
+    $st->bind_param('is', $to, $color);
+    $st->execute();
+
+    // --------------------------
+
+    // 6. Αλλαγή σειράς (Προσωρινά αυτόματα)
     $next = ($color=='W')?'B':'W';
     $mysqli->query("UPDATE game_status SET p_turn='$next'");
 
