@@ -60,7 +60,11 @@
 }
 
 .board-slot.top { justify-content: flex-start; }
-.board-slot.bottom { justify-content: flex-end; flex-direction: column-reverse; }
+/* Αλλαγή: Βάζουμε flex-start για να πατάνε κάτω */
+.board-slot.bottom { 
+    justify-content: flex-start; 
+    flex-direction: column-reverse; 
+}
 
 /* ΠΟΥΛΙΑ */
 .piece {
