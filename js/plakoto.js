@@ -83,7 +83,7 @@ function login_to_game() {
     
     $.ajax({
         url: "portes.php/player/" + p_color, 
-        method: 'PUT',
+        method: 'POST', // ΤΟ ΑΛΛΑΖΟΥΜΕ ΣΕ POST
         dataType: "json",
         contentType: 'application/json',
         data: JSON.stringify({username: user, piece_color: p_color}),
