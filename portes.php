@@ -5,6 +5,8 @@ require_once "lib/board.php";
 require_once "lib/game.php";
 require_once "lib/users.php";
 
+header('Content-Type: application/json');
+
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 $input = json_decode(file_get_contents('php://input'),true);
@@ -85,7 +87,12 @@ function handle_player($method, $p, $input) {
             break;
         case 'B': 
         case 'W': 
-            handle_user($method, $b, $input);
+            
+            if($method == 'PUT' || $method == 'POST') {
+                handle_user($method, $b, $input);
+            } else {
+                header("HTTP/1.1 405 Method Not Allowed");
+            }
             break;
         default: 
             header("HTTP/1.1 404 Not Found");
