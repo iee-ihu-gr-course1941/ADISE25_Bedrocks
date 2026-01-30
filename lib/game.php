@@ -83,6 +83,13 @@ function update_game_status() {
     $st = $mysqli->prepare($sql);
     $st->bind_param('ss', $new_status, $new_turn);
     $st->execute();
+	if ($new_status !== null || $new_turn !== null) {
+    $sql = 'UPDATE game_status SET status=COALESCE(?,status), p_turn=COALESCE(?,p_turn)';
+    $st = $mysqli->prepare($sql);
+    $st->bind_param('ss', $new_status, $new_turn);
+    $st->execute();
+}
+
 }
 
 /* -------------------------
