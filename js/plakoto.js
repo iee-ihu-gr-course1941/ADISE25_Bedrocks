@@ -1,16 +1,24 @@
-var me = { token: null, piece_color: null };
+var me = {};
+var game_status = {};
+var board = {};
+var dice = [];
 
-$(function() {
+$(function () {
     $('#plakoto_login').click(login);
-    $('#plakoto_reset').click(reset_board);
+    $('#roll_dice').click(roll_dice);
     $('#do_move').click(do_move);
-    
-    // Ανανέωση κάθε 2 δευτερόλεπτα (Polling)
-    setInterval(fetch_board, 2000);
+    $('#refresh_board').click(update_state);
+    $('#plakoto_reset').click(reset_game);
+
+    $('.board-slot').click(click_on_point);
+
+    $('#move_div').hide();
+    update_state();
 });
 
+/* ---------- LOGIN ---------- */
+
 function login() {
-<<<<<<< HEAD
     $.post('game.php?action=login', {
         username: $('#username').val(),
         color: $('#pcolor').val()
@@ -96,64 +104,27 @@ function update_moves_selector() {
         if (dest >= 1 && dest <= 24) {
             $('#the_move_dest').append(`<option>${dest}</option>`);
         }
-=======
-    var user = $('#username').val();
-    var color = $('#pcolor').val();
-    $.ajax({
-        url: "portes.php/player/" + color,
-        method: 'PUT',
-        contentType: 'application/json',
-        data: JSON.stringify({username: user, piece_color: color}),
-        success: function(data) {
-            me = data[0];
-            alert("Επιτυχής Σύνδεση! Token: " + me.token);
-            fetch_board();
-        },
-        error: function() { alert("Αποτυχία σύνδεσης."); }
->>>>>>> 48924139f2daeb781e2fd105b0eacc1dbadb398b
     });
 }
 
-function reset_board() {
-    $.post("portes.php/board/", function() { fetch_board(); });
+function update_info() {
+    if (game_status.status === 'initialized') {
+        $('#game_info').html("Περιμένουμε αντίπαλο...");
+        return;
+    }
+
+    if (game_status.status === 'started') {
+        let t = (game_status.turn === 'W') ? 'Λευκά' : 'Μαύρα';
+        $('#game_info').html("Σειρά: <b>" + t + "</b>");
+    }
+
+    if (game_status.status === 'aborted') {
+        $('#game_info').html("Το παιχνίδι εγκαταλείφθηκε");
+    }
 }
 
-function fetch_board() {
-    $.get("portes.php/board/", function(data) {
-        // Καθαρισμός
-        $('.board-slot').html('');
-        
-        // Ζωγράφισμα: Η PHP τα στέλνει με τη σειρά (ORDER BY id)
-        // άρα το τελευταίο που μπαίνει (append) θα φαίνεται πάνω-πάνω
-        data.forEach(function(piece) {
-            var colorClass = (piece.piece_color == 'W') ? 'white_piece' : 'green_piece';
-            
-            // Τοποθέτηση στο σωστό div
-            $('#pos_' + piece.pos).append('<div class="piece '+colorClass+'"></div>');
-        });
-    });
-}
+/* ---------- RESET ---------- */
 
-function do_move() {
-    var s = $('#src').val();
-    var d = $('#dest').val();
-    
-    if(!s || !d) { alert("Δώσε αφετηρία και προορισμό"); return; }
-    
-    $.ajax({
-        url: "portes.php/board/piece/" + s,
-        method: 'PUT',
-        headers: {"App-Token": me.token},
-        contentType: 'application/json',
-        data: JSON.stringify({to_pos: d}),
-        success: function() {
-            console.log("Move OK");
-            fetch_board();
-            $('#src').val('');
-            $('#dest').val('');
-        },
-        error: function(e) {
-            alert("Error: " + e.responseJSON.errormesg);
-        }
-    });
+function reset_game() {
+    $.post('game.php?action=reset', {}, update_state, 'json');
 }
