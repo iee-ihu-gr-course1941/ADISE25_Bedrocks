@@ -54,7 +54,9 @@
    
     margin: 0 2px; 
     
-      /*
+    
+    /* debug */
+      /* 
     border: 1px dashed yellow; 
     background-color: rgba(255, 0, 0, 0.3); */
 }
@@ -62,7 +64,7 @@
 .board-slot.top { justify-content: flex-start; }
 /* Αλλαγή: Βάζουμε flex-start για να πατάνε κάτω */
 .board-slot.bottom { 
-    justify-content: flex-start; 
+    justify-content: flex-end; 
     flex-direction: column-reverse;
     
     /* background-color: red; */
