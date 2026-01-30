@@ -25,10 +25,10 @@
     
    
     /* Αυτό βάζει απόσταση ανάμεσα στην πάνω και την κάτω σειρά */
-    row-gap: 50px; 
+    row-gap: 40px; 
     
     
-    padding: 55px 152px; /* 27 ηταν */
+    padding: 30px 152px 85px 152px; /* 27 ηταν */
     
     box-sizing: border-box;
 
@@ -56,18 +56,18 @@
     
     
     /* debug */
-      /* 
+      
     border: 1px dashed yellow; 
-    background-color: rgba(255, 0, 0, 0.3); */
+    background-color: rgba(255, 0, 0, 0.3); 
 }
 
 .board-slot.top { justify-content: flex-start; }
 /* Αλλαγή: Βάζουμε flex-start για να πατάνε κάτω */
 .board-slot.bottom { 
-    justify-content: flex-end; 
+    justify-content: flex-start; 
     flex-direction: column-reverse;
     
-    /* background-color: red; */
+     background-color: red; 
 }
 
 /* ΠΟΥΛΙΑ */
@@ -127,23 +127,9 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*  */
 
- /*--- DEBUGGING
+ --- DEBUGGING 
 
 .board-slot {
     
@@ -156,4 +142,4 @@
 
  .board-slot:nth-child(even) { 
      background-color: rgba(0, 0, 255, 0.3); 
- }    */
+ }    
