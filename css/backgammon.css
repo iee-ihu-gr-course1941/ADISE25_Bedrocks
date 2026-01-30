@@ -51,7 +51,7 @@
     align-items: center;
     cursor: pointer;
     
-    /* Σχεδόν μηδενικό κενό, γιατί τα τρίγωνα είναι κολλητά */
+   
     margin: 0 2px; 
     
       /*
@@ -64,16 +64,37 @@
 
 /* ΠΟΥΛΙΑ */
 .piece {
-    width: 90%; 
-    aspect-ratio: 1;
+    
+    width: 42px; 
+    height: 42px; 
+    
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    margin-bottom: -5px; 
+    
+    /* --- ΤΟ ΒΑΣΙΚΟ ΚΟΛΠΟ --- */
+    
+    margin-bottom: -18px; 
+    
     z-index: 10;
+    
+    /* Πολύ σημαντικό: Να μην παραμορφώνονται (ζουλιούνται) τα πούλια */
+    flex-shrink: 0; 
 }
 
+/* --- HEAVY STACKING (ΓΙΑ ΤΗ ΜΑΝΑ) --- */
+/* Εντολή: Αν σε μια στήλη υπάρχουν πάνω από 5 πούλια (n+6), */
+/* τα επόμενα να "χωθούν" ακόμα πιο βαθιά (-30px) για να χωρέσουν τα 15 */
+.board-slot .piece:nth-child(n+6) {
+    margin-bottom: -30px; 
+}
 
+/* Το τελευταίο πούλι στη στοίβα δεν πρέπει να έχει αρνητικό περιθώριο */
+.board-slot .piece:last-child {
+    margin-bottom: 0;
+}
+
+/* Χρώματα (Αυτά τα κρατάς όπως ήταν) */
 .white_piece {
     background-image: url('../imagesErgasia/asproPouli.png'); 
 }
@@ -95,9 +116,26 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*  */
 
-/* --- DEBUGGING
+ /*--- DEBUGGING
 
 .board-slot {
     
@@ -109,5 +147,5 @@
 
 
  .board-slot:nth-child(even) { 
-     background-color: rgba(0, 0, 255, 0.3); Αχνό μπλε για τα ζυγά 
- }                    */
+     background-color: rgba(0, 0, 255, 0.3); 
+ }    */
