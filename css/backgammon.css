@@ -25,10 +25,10 @@
     
    
     /* Αυτό βάζει απόσταση ανάμεσα στην πάνω και την κάτω σειρά */
-    row-gap: 25x; 
+    row-gap: 50x; 
     
     
-    padding: 30px 152px 135px 152px; /* 27 ηταν */
+    padding: 30px 152px 140px 152px; /* 27 ηταν */
     
     box-sizing: border-box;
 
