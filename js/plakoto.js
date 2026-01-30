@@ -25,7 +25,7 @@ function login() {
     }, handle_state, 'json');
 }
 
-/* --------- STATE ---------- */
+/* ---------- STATE ---------- */
 
 function update_state() {
     $.get('game.php?action=state', handle_state, 'json');
