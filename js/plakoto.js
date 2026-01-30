@@ -3,7 +3,6 @@ var game_status = {};
 var board = {};
 
 $(function() {
-    //  draw_empty_board('W'); kolitsis
     fill_board();
 
     $('#plakoto_reset').click(reset_board);
@@ -55,8 +54,6 @@ function fill_board() {
     });
 }
 
-
-
 function fill_board_by_data(data) {
     board = data;
     
@@ -72,12 +69,8 @@ function fill_board_by_data(data) {
         
         $(id).append('<div class="piece ' + color_class + '"></div>');
     }
-
-    if(me.piece_color != null && game_status.p_turn == me.piece_color) {
-        $('#move_div').show(500);
-    } else {
-        $('#move_div').hide(500);
-    }
+    
+    
 }
 
 function login_to_game() {
@@ -114,6 +107,7 @@ function game_status_update() {
     });
 }
 
+/* --- ΑΛΛΑΓΜΕΝΗ ΣΥΝΑΡΤΗΣΗ STATUS --- */
 function update_status(data) {
     var last_turn = game_status.p_turn;
     game_status = data[0];
@@ -123,9 +117,9 @@ function update_status(data) {
         fill_board();
     }
 
-    // ΕΛΕΓΧΟΣ ΣΕΙΡΑΣ
-    if(game_status.p_turn == me.piece_color && me.piece_color != null) {
-        // ΕΙΝΑΙ Η ΣΕΙΡΑ ΜΟΥ
+    // ΕΛΕΓΧΟΣ: Είναι η σειρά μου ΚΑΙ το παιχνίδι είναι STARTED;
+    if(game_status.p_turn == me.piece_color && me.piece_color != null && game_status.status == 'started') {
+        // ΕΙΝΑΙ Η ΣΕΙΡΑ ΜΟΥ & ΤΟ ΠΑΙΧΝΙΔΙ ΤΡΕΧΕΙ
         $('#move_div').show(500);
         
         // --- Ξεκλείδωσε το κουμπί ---
@@ -133,19 +127,42 @@ function update_status(data) {
         
         setTimeout(game_status_update, 10000);
     } else {
-        // ΔΕΝ ΕΙΝΑΙ Η ΣΕΙΡΑ ΜΟΥ
+        // ΔΕΝ ΕΙΝΑΙ Η ΣΕΙΡΑ ΜΟΥ ή ΠΕΡΙΜΕΝΩ ΑΝΤΙΠΑΛΟ
         $('#move_div').hide(500);
         
-        //Κλείδωσε το κουμπί ---
+        // --- Κλείδωσε το κουμπί ---
         $('#roll_dice').prop('disabled', true); 
         
         setTimeout(game_status_update, 3000);
     }
 }
 
+
 function update_info(){
-    var turn_text = (game_status.p_turn == 'W') ? "Λευκού" : "Μαύρου";
-    $('#game_info').html("Είστε ο παίκτης: <b>" + me.piece_color + "</b> (" + me.username + ") | Σειρά: <b>" + turn_text + "</b>");
+    // Έλεγχος αν είμαστε σε φάση αναμονής (initialized)
+    if (game_status.status == 'initialized') {
+        $('#game_info').html("Γειά σου <b>" + me.username + "</b>. Περιμένουμε τον αντίπαλο να συνδεθεί...");
+        $('#game_info').addClass('alert-warning').removeClass('alert-info');
+        return; 
+    }
+
+    // Έλεγχος αν το παιχνίδι παίζει κανονικά (started)
+    if (game_status.status == 'started') {
+        $('#game_info').removeClass('alert-warning').addClass('alert-info');
+        var turn_text = (game_status.p_turn == 'W') ? "Λευκού" : "Μαύρου";
+        
+        if (game_status.p_turn == me.piece_color) {
+            turn_text += " (ΔΙΚΗ ΣΟΥ ΣΕΙΡΑ!)";
+        }
+        
+        $('#game_info').html("Είστε ο παίκτης: <b>" + me.piece_color + "</b> (" + me.username + ") | Σειρά: <b>" + turn_text + "</b>");
+    }
+    
+    // Έλεγχος αν το παιχνίδι τελείωσε
+    if (game_status.status == 'ended') {
+         $('#game_info').html("Το παιχνίδι ΤΕΛΕΙΩΣΕ! Νικητής: " + game_status.result);
+         $('#game_info').addClass('alert-danger').removeClass('alert-info');
+    }
 }
 
 function click_on_point(e) {
@@ -170,7 +187,7 @@ function reset_board() {
     $.ajax({    
         method: 'POST',
         url: "portes.php/board/", 
-        headers: {"App-Token": me.token},           
+        headers: {"App-Token": me.token},          
         success: function(data) {
             fill_board_by_data(data);
             location.reload();
@@ -184,17 +201,18 @@ function login_error(data) {
 }
 
 function roll_dice() {
-    if (!me.piece_color || game_status.p_turn != me.piece_color) {
+    
+    if (!me.piece_color || game_status.p_turn != me.piece_color || game_status.status != 'started') {
         alert("Δεν είναι η σειρά σας να ρίξετε!");
-        return; // Σταματάμε εδώ, δεν ρίχνει ζάρια
+        return; 
     }
+    
     $('#dice1').html('');
     $('#dice2').html('');
 
     // Παράγουμε τυχαία νούμερα 1-6
     var d1 = Math.floor(Math.random() * 6) + 1;
     var d2 = Math.floor(Math.random() * 6) + 1;
-
     
     var img1 = '<img class="dice-img" src="imagesErgasia/zari' + d1 + '.png">';
     var img2 = '<img class="dice-img" src="imagesErgasia/zari' + d2 + '.png">';
