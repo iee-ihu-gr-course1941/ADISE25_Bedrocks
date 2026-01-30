@@ -1,108 +1,87 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Παιχνίδι Πλακωτό - ΑΔΙΣΕ">
-  <meta name="author" content="">
-  <title>ΑΔΙΣΕ: Πλακωτό</title>
-
-  <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
-  <link href="css/backgammon.css" rel="stylesheet"> 
-  
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="bootstrap/jquery-3.2.1.min.js"></script>
-  <script src="bootstrap/bootstrap.min.js"></script>
-  <script src="js/plakoto.js"></script>
+    <meta charset="UTF-8">
+    <title>Πλακωτό - Project</title>
+    
+    <link rel="stylesheet" href="css/backgammon.css">
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/plakoto.js"></script>
 </head>
-
 <body>
-  <div class="container text-center">
-    <h1 class="mt-4">ΠΛΑΚΩΤΟ</h1>
-    
-    <!-- <div id='backgammon_board' class="mx-auto"> -->
-    <div id='backgammon_board' class="mx-auto">
-    <div id="visual_board">
+
+    <h1 style="text-align:center;">Πλακωτό</h1>
+
+    <div id="backgammon_board">
+        <div id="visual_board">
+            <div class="quadrant top-left">
+                <div class="board-slot top" id="pos_13"></div>
+                <div class="board-slot top" id="pos_14"></div>
+                <div class="board-slot top" id="pos_15"></div>
+                <div class="board-slot top" id="pos_16"></div>
+                <div class="board-slot top" id="pos_17"></div>
+                <div class="board-slot top" id="pos_18"></div>
+            </div>
+            <div class="quadrant top-right">
+                <div class="board-slot top" id="pos_19"></div>
+                <div class="board-slot top" id="pos_20"></div>
+                <div class="board-slot top" id="pos_21"></div>
+                <div class="board-slot top" id="pos_22"></div>
+                <div class="board-slot top" id="pos_23"></div>
+                <div class="board-slot top" id="pos_24"></div>
+            </div>
+            <div class="quadrant bottom-left">
+                <div class="board-slot bottom" id="pos_12"></div>
+                <div class="board-slot bottom" id="pos_11"></div>
+                <div class="board-slot bottom" id="pos_10"></div>
+                <div class="board-slot bottom" id="pos_9"></div>
+                <div class="board-slot bottom" id="pos_8"></div>
+                <div class="board-slot bottom" id="pos_7"></div>
+            </div>
+            <div class="quadrant bottom-right">
+                <div class="board-slot bottom" id="pos_6"></div>
+                <div class="board-slot bottom" id="pos_5"></div>
+                <div class="board-slot bottom" id="pos_4"></div>
+                <div class="board-slot bottom" id="pos_3"></div>
+                <div class="board-slot bottom" id="pos_2"></div>
+                <div class="board-slot bottom" id="pos_1"></div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin-top:20px; padding: 20px; background: #f0f0f0; border: 1px solid #ccc;">
         
-        <div class="quadrant top-left">
-            <div id="pos_13" class="board-slot top"></div>
-            <div id="pos_14" class="board-slot top"></div>
-            <div id="pos_15" class="board-slot top"></div>
-            <div id="pos_16" class="board-slot top"></div>
-            <div id="pos_17" class="board-slot top"></div>
-            <div id="pos_18" class="board-slot top"></div>
-        </div>
-
-        <div class="quadrant top-right">
-            <div id="pos_19" class="board-slot top"></div>
-            <div id="pos_20" class="board-slot top"></div>
-            <div id="pos_21" class="board-slot top"></div>
-            <div id="pos_22" class="board-slot top"></div>
-            <div id="pos_23" class="board-slot top"></div>
-            <div id="pos_24" class="board-slot top"></div>
-        </div>
-<!-- kolitsis 24-66 -->
-
-        <div class="quadrant bottom-left">
-            <div id="pos_12" class="board-slot bottom"></div>
-            <div id="pos_11" class="board-slot bottom"></div>
-            <div id="pos_10" class="board-slot bottom"></div>
-            <div id="pos_9"  class="board-slot bottom"></div>
-            <div id="pos_8"  class="board-slot bottom"></div>
-            <div id="pos_7"  class="board-slot bottom"></div>
-        </div>
-
-        <div class="quadrant bottom-right">
-            <div id="pos_6" class="board-slot bottom"></div>
-            <div id="pos_5" class="board-slot bottom"></div>
-            <div id="pos_4" class="board-slot bottom"></div>
-            <div id="pos_3" class="board-slot bottom"></div>
-            <div id="pos_2" class="board-slot bottom"></div>
-            <div id="pos_1" class="board-slot bottom"></div>
-        </div>
+        <h3>Πίνακας Ελέγχου</h3>
         
-    </div>
-</div>
-    <!-- </div> -->
-
-    <div id='dice_area' class="my-3">
-        <span id='dice1' class="badge badge-secondary" style="font-size: 2em;">-</span>
-        <span id='dice2' class="badge badge-secondary" style="font-size: 2em;">-</span>
-       <button id='roll_dice' class='btn btn-success ml-3' disabled>ΡΙΞΕ ΖΑΡΙΑ</button>
-    </div>
-
-    <div id='game_initializer' class="card p-3 my-3">
-      <h3>Σύνδεση Παίκτη</h3>
-      <div class="form-inline justify-content-center">
-        <input id='username' class="form-control mr-2" placeholder="Όνομα Χρήστη"> 
-        <select id='pcolor' class="form-control mr-2">
-            <option value='W'>Λευκά (W)</option>
-            <option value='B'>Μαύρα (B)</option>
-        </select>
-        <button id='plakoto_login' class='btn btn-primary'>ΕΙΣΟΔΟΣ ΣΤΟ ΠΑΙΧΝΙΔΙ</button>
-      </div>
-    </div>
-    
-    <div id='game_info' class="alert alert-info">
-        Περιμένοντας παίκτες...
-    </div>
-
-    <div id='move_div' class="card p-3 my-3">
-      <h4>Κίνηση Πουλιού</h4>
-      <div class="form-inline justify-content-center">
-        Από Θέση (1-24): <input type="number" id='the_move_src' class="form-control mx-2" min="1" max="24" style="width: 80px;">
-        Προς Θέση: 
-        <select id='the_move_dest' class="form-control mx-2">
+        <div style="margin-bottom: 20px;">
+            <input type="text" id="username" placeholder="Όνομα Χρήστη">
+            <select id="pcolor">
+                <option value="W">Λευκά (W)</option>
+                <option value="B">Μαύρα (B)</option>
             </select>
-        <button id='do_move' class='btn btn-primary'>ΚΑΝΕ ΤΗΝ ΚΙΝΗΣΗ</button>
-      </div>
-    </div>  
+            <button id="plakoto_login">Σύνδεση (Login)</button>
+        </div>
+        
+        <hr style="width: 50%;">
+        
+        <div style="margin: 20px 0;">
+            <label>Από Θέση:</label>
+            <input type="number" id="src" min="1" max="24" style="width:50px"> 
+            
+            <label>Σε Θέση:</label>
+            <input type="number" id="dest" min="1" max="24" style="width:50px">
+            
+            <button id="do_move" style="font-weight:bold; padding: 5px 15px;">Κίνηση</button>
+        </div>
 
-    <div class="mb-5">
-        <button id='refresh_board' class='btn btn-info'>Ανανέωση Ταμπλό</button>
-        <button id='plakoto_reset' class='btn btn-warning'>Επανεκκίνηση Παιχνιδιού</button>
+        <hr style="width: 50%;">
+
+        <button id="plakoto_reset" style="background:darkred; color:white; border:none; padding:10px;">
+            Επανεκκίνηση Παιχνιδιού (Reset)
+        </button>
+
     </div>
-  </div>
 
 </body>
 </html>
