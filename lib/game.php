@@ -1,80 +1,108 @@
 <?php
 
-//Almost same with the show_board
+/* =========================
+   GAME STATUS – PLAKOTO
+   ========================= */
 
 function show_status() {
-  global $mysqli;
-	
-	$sql = 'select * from game_status';
-	$st = $mysqli->prepare($sql);
+    global $mysqli;
 
-	$st->execute();
-	$res = $st->get_result();
+    $sql = 'SELECT * FROM game_status';
+    $st = $mysqli->prepare($sql);
+    $st->execute();
+    $res = $st->get_result();
 
-	header('Content-type: application/json');
-	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+    header('Content-type: application/json');
+    echo json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 }
 
+/* -------------------------
+   UPDATE GAME STATUS
+   ------------------------- */
 function update_game_status() {
-	global $mysqli;
-	
-	$sql = 'select * from game_status';
-	$st = $mysqli->prepare($sql);
-	$st->execute();
-	$res = $st->get_result();
-	$status = $res->fetch_assoc();
-	
-	
-	$new_status=null;
-	$new_turn=null;
-	
-	$st3=$mysqli->prepare('select count(*) as aborted from players WHERE last_action< (NOW() - INTERVAL 20 MINUTE)');
-	$st3->execute();
-	$res3 = $st3->get_result();
-	$aborted = $res3->fetch_assoc()['aborted']; 
-	if($aborted>0) {
-		$sql = "UPDATE players SET username=NULL, token=NULL WHERE last_action< (NOW() - INTERVAL 20 MINUTE)";
-		$st2 = $mysqli->prepare($sql);
-		$st2->execute();
-		if($status['status']=='started') {
-			$new_status='aborted';
-		}
-	}
+    global $mysqli;
 
-	
-	$sql = 'select count(*) as c from players where username is not null';
-	$st = $mysqli->prepare($sql);
-	$st->execute();
-	$res = $st->get_result();
-	$active_players = $res->fetch_assoc()['c'];
-	
-	switch($active_players) {
-		case 0: $new_status='not active'; break;
-		case 1: $new_status='initialized'; break;
-		case 2: $new_status='started'; 
-			if($status['p_turn']==null) {
-				$new_turn='W'; // It was not started before...
-			}
-			break;
-	}
+    // τρέχουσα κατάσταση
+    $status = read_status();
 
-	$sql = 'update game_status set status=?, p_turn=?';
-	$st = $mysqli->prepare($sql);
-	$st->bind_param('ss',$new_status,$new_turn);
-	$st->execute();
+    $new_status = null;
+    $new_turn   = null;
+
+    /* --------- ABORT LOGIC --------- */
+    $st = $mysqli->prepare(
+        'SELECT COUNT(*) AS aborted 
+         FROM players 
+         WHERE last_action < (NOW() - INTERVAL 20 MINUTE)'
+    );
+    $st->execute();
+    $aborted = $st->get_result()->fetch_assoc()['aborted'];
+
+    if ($aborted > 0) {
+        $sql = "UPDATE players 
+                SET username=NULL, token=NULL 
+                WHERE last_action < (NOW() - INTERVAL 20 MINUTE)";
+        $mysqli->prepare($sql)->execute();
+
+        if ($status['status'] === 'started') {
+            $new_status = 'aborted';
+        }
+    }
+
+    /* --------- ACTIVE PLAYERS --------- */
+    $st = $mysqli->prepare(
+        'SELECT COUNT(*) AS c 
+         FROM players 
+         WHERE username IS NOT NULL'
+    );
+    $st->execute();
+    $active_players = $st->get_result()->fetch_assoc()['c'];
+
+    switch ($active_players) {
+        case 0:
+            $new_status = 'not active';
+            $new_turn = NULL;
+            break;
+
+        case 1:
+            $new_status = 'initialized';
+            $new_turn = NULL;
+            break;
+
+        case 2:
+            $new_status = 'started';
+
+            // αν ξεκινάει τώρα το παιχνίδι
+            if ($status['p_turn'] === NULL) {
+                $new_turn = 'W'; // Λευκά ξεκινούν στο Πλακωτό
+            }
+            break;
+    }
+
+    /* --------- UPDATE DB --------- */
+    $sql = 'UPDATE game_status SET status=?, p_turn=?';
+    $st = $mysqli->prepare($sql);
+    $st->bind_param('ss', $new_status, $new_turn);
+    $st->execute();
+	if ($new_status !== null || $new_turn !== null) {
+    $sql = 'UPDATE game_status SET status=COALESCE(?,status), p_turn=COALESCE(?,p_turn)';
+    $st = $mysqli->prepare($sql);
+    $st->bind_param('ss', $new_status, $new_turn);
+    $st->execute();
 }
 
-//lecture 4 - Returns the status of the game
+}
+
+/* -------------------------
+   READ STATUS
+   ------------------------- */
 function read_status() {
-	global $mysqli;
-	
-	$sql = 'select * from game_status';
-	$st = $mysqli->prepare($sql);
+    global $mysqli;
 
-	$st->execute();
-	$res = $st->get_result();
-	$status = $res->fetch_assoc();
-	return($status);
+    $sql = 'SELECT * FROM game_status';
+    $st = $mysqli->prepare($sql);
+    $st->execute();
+    $res = $st->get_result();
+
+    return $res->fetch_assoc();
 }
-
 ?>
