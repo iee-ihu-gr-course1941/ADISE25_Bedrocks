@@ -57,8 +57,8 @@
     
     /* debug */
       
-    border: 1px dashed yellow; 
-    background-color: rgba(255, 0, 0, 0.3); 
+   /* border: 1px dashed yellow; 
+    background-color: rgba(255, 0, 0, 0.3); */
 }
 
 .board-slot.top { justify-content: flex-start; }
@@ -129,7 +129,7 @@
 
 /*  */
 
- --- DEBUGGING 
+ /* --- DEBUGGING  
 
 .board-slot {
     
@@ -142,4 +142,4 @@
 
  .board-slot:nth-child(even) { 
      background-color: rgba(0, 0, 255, 0.3); 
- }    
+ }    */
