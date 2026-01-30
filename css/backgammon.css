@@ -82,6 +82,18 @@
     background-image: url('../imagesErgasia/prasinoPouli.png'); 
 }
 
+.dice-img {
+    width: 60px;       /* Τις κάνουμε μικρές και κομψές */
+    height: 60px;
+    margin: 0 10px;    /* Κενό ανάμεσά τους */
+    vertical-align: middle;
+    /* Προαιρετικά εφέ για να φαίνονται ωραία */
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); 
+}
+
+
+
 
 /*  */
 

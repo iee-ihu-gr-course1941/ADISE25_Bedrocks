@@ -10,7 +10,10 @@ $(function() {
     $('#plakoto_login').click(login_to_game);
     $('#do_move').click(do_move);
     $('#refresh_board').click(fill_board);
-
+    
+    $('.board-slot').click(click_on_point); 
+    $('#roll_dice').click(roll_dice);
+    
     $('#move_div').hide();
     
     $('#the_move_src').change(update_moves_selector);
@@ -43,30 +46,6 @@ function move_result(data) {
     $('#the_move_dest').html('');
 }
 
-/* function draw_empty_board(p) {
-    
-     var t = '<div id="plakoto_table" class="container">';
-    
-    
-     t += '<div class="row board_row">';
-    for(var j=13; j<=24; j++) {
-        t += '<div class="plakoto_point col" id="pos_' + j + '"><small>' + j + '</small><div class="stack"></div></div>';
-    }
-    t += '</div>';
-
-    
-    t += '<div class="row board_row mt-4">';
-    for(var j=12; j>=1; j--) {
-        t += '<div class="plakoto_point col" id="pos_' + j + '"><small>' + j + '</small><div class="stack"></div></div>';
-    }
-    t += '</div>';
-    
-    t += '</div>';
-    $('#backgammon_board').html(t);
-    $('.plakoto_point').click(click_on_point);
-} 
-  kolitsis:  gia na kano to css p thelo leei de xreiazetai  to svinoume olo      */  
-
 function fill_board() {
     $.ajax({    
         method: "get",
@@ -76,26 +55,7 @@ function fill_board() {
     });
 }
 
-/* function fill_board_by_data(data) {
-    board = data;
-    
-    $('.stack').html('');
 
-    for(var i=0; i<data.length; i++) {
-        var o = data[i];
-        var id = '#pos_' + o.pos + ' .stack';
-        var color_class = (o.piece_color == 'W') ? 'white_piece' : 'black_piece';
-        
-        $(id).append('<div class="piece ' + color_class + '"></div>');
-    }
-
-    if(me.piece_color != null && game_status.p_turn == me.piece_color) {
-        $('#move_div').show(500);
-    } else {
-        $('#move_div').hide(500);
-    }
-} kolitsis: palia  fill board by data , grammes 100-121
-*/
 
 function fill_board_by_data(data) {
     board = data;
@@ -107,7 +67,7 @@ function fill_board_by_data(data) {
         var o = data[i];
         var id = '#pos_' + o.pos; 
         
-        // ΑΛΛΑΓΗ ΕΔΩ: Αν δεν είναι Λευκό ('W'), τότε είναι Πράσινο
+        // αν δεν είναι Λευκό ('W'), τότε είναι Πράσινο
         var color_class = (o.piece_color == 'W') ? 'white_piece' : 'green_piece';
         
         $(id).append('<div class="piece ' + color_class + '"></div>');
@@ -163,11 +123,22 @@ function update_status(data) {
         fill_board();
     }
 
+    // ΕΛΕΓΧΟΣ ΣΕΙΡΑΣ
     if(game_status.p_turn == me.piece_color && me.piece_color != null) {
+        // ΕΙΝΑΙ Η ΣΕΙΡΑ ΜΟΥ
         $('#move_div').show(500);
+        
+        // --- Ξεκλείδωσε το κουμπί ---
+        $('#roll_dice').prop('disabled', false); 
+        
         setTimeout(game_status_update, 10000);
     } else {
+        // ΔΕΝ ΕΙΝΑΙ Η ΣΕΙΡΑ ΜΟΥ
         $('#move_div').hide(500);
+        
+        //Κλείδωσε το κουμπί ---
+        $('#roll_dice').prop('disabled', true); 
+        
         setTimeout(game_status_update, 3000);
     }
 }
@@ -210,4 +181,24 @@ function reset_board() {
 function login_error(data) {
     var x = data.responseJSON;
     alert(x ? x.errormesg : "Παρουσιάστηκε σφάλμα στη σύνδεση.");
+}
+
+function roll_dice() {
+    if (!me.piece_color || game_status.p_turn != me.piece_color) {
+        alert("Δεν είναι η σειρά σας να ρίξετε!");
+        return; // Σταματάμε εδώ, δεν ρίχνει ζάρια
+    }
+    $('#dice1').html('');
+    $('#dice2').html('');
+
+    // Παράγουμε τυχαία νούμερα 1-6
+    var d1 = Math.floor(Math.random() * 6) + 1;
+    var d2 = Math.floor(Math.random() * 6) + 1;
+
+    
+    var img1 = '<img class="dice-img" src="imagesErgasia/zari' + d1 + '.png">';
+    var img2 = '<img class="dice-img" src="imagesErgasia/zari' + d2 + '.png">';
+
+    $('#dice1').html(img1);
+    $('#dice2').html(img2);
 }
