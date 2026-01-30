@@ -1,0 +1,137 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #111;
+    color: white;
+    text-align: center;
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; /* Κόβει τελείως το Scroll */
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- HEADER (10% του ύψους) --- */
+.header-info {
+    height: 10vh;
+    background: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid #444;
+    padding: 0 10px;
+}
+
+.die { font-size: 1.5rem; background: #eee; color: #000; padding: 2px 10px; border-radius: 4px; font-weight: bold; min-width: 30px;}
+button { padding: 8px 12px; font-size: 1rem; border-radius: 4px; border: none; cursor: pointer; background: #e67e22; color: white; white-space: nowrap; }
+button:disabled { background: #555; cursor: not-allowed; }
+.btn-resign { background: #c0392b; font-size: 0.9rem; }
+
+/* --- BOARD CONTAINER (90% του ύψους) --- */
+.board-wrapper {
+    height: 90vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1a1a1a;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.board {
+    /* Το ταμπλό πιάνει όσο περισσότερο χώρο μπορεί αλλά κρατάει αναλογία */
+    width: 100%;
+    max-width: 1000px;
+    height: 100%;
+    max-height: 85vh; 
+    display: flex;
+    flex-direction: column;
+    background-color: #8e44ad;
+    border: 8px solid #5e3370;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* --- MISA (TOP & BOTTOM) --- */
+.half-board {
+    flex: 1; /* Πιάνει ακριβώς το 50% του ύψους του board */
+    display: flex;
+    width: 100%;
+    overflow: hidden; /* Για να μην βγαίνουν πούλια έξω */
+}
+
+.half-board.top { border-bottom: 4px solid rgba(0,0,0,0.3); }
+.half-board.bottom { border-top: 4px solid rgba(0,0,0,0.3); }
+
+/* --- POINTS (ΘΕΣΕΙΣ) --- */
+.point {
+    flex: 1; /* Κάθε θέση πιάνει ίσο πλάτος (1/12) */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-left: 1px solid rgba(0,0,0,0.1);
+    border-right: 1px solid rgba(0,0,0,0.1);
+    padding: 5px 0;
+}
+
+/* Χρώματα Point */
+.point:nth-child(odd) { background-color: #9b59b6; }
+.point:nth-child(even) { background-color: #8e44ad; }
+
+/* Κατεύθυνση στοίβαξης πουλιών */
+.half-board.top .point { justify-content: flex-start; } /* Πάνω: ξεκινάνε από πάνω */
+.half-board.bottom .point { justify-content: flex-end; } /* Κάτω: ξεκινάνε από κάτω */
+
+.point-number {
+    position: absolute;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+    z-index: 0;
+}
+.half-board.top .point-number { top: 2px; }
+.half-board.bottom .point-number { bottom: 2px; }
+
+/* --- PIECES (ΠΟΥΛΙΑ) --- */
+.piece {
+    /* Responsive μέγεθος βάσει ύψους οθόνης */
+    width: 6vh; 
+    height: 6vh;
+    min-height: 6vh; /* Να μην ζουλιούνται τελείως */
+    
+    border-radius: 50%;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5), 2px 2px 3px rgba(0,0,0,0.4);
+    z-index: 10;
+    cursor: pointer;
+    transition: transform 0.1s;
+    
+    /* Για να κεντράρεται αν το πλάτος της θέσης είναι μεγάλο */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Αν η οθόνη είναι πολύ στενή (κινητό), μικραίνουμε τα πούλια */
+@media (max-width: 600px) {
+    .piece { width: 4.5vh; height: 4.5vh; min-height: 4.5vh; }
+}
+
+.piece.white { background: radial-gradient(circle at 30% 30%, #fff, #bdc3c7); border: 1px solid #7f8c8d; }
+.piece.black { background: radial-gradient(circle at 30% 30%, #555, #000); border: 1px solid #000; }
+
+/* Highlights */
+.highlight-move { 
+    background-color: rgba(46, 204, 113, 0.5) !important; 
+    box-shadow: inset 0 0 10px #2ecc71;
+    cursor: pointer; 
+}
+.selected-piece { 
+    border: 3px solid #f1c40f !important; 
+    transform: scale(1.15); 
+    z-index: 20; 
+}
+
+/* Modal */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; z-index: 100; }
+.modal-content { background: #333; padding: 30px; border-radius: 10px; display: flex; flex-direction: column; gap: 15px; width: 300px; }
