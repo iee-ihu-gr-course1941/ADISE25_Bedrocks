@@ -64,10 +64,10 @@
 .board-slot.top { justify-content: flex-start; }
 /* Αλλαγή: Βάζουμε flex-start για να πατάνε κάτω */
 .board-slot.bottom { 
-    justify-content: flex-end; 
+    justify-content: flex-start; 
     flex-direction: column-reverse;
     
-    /* background-color: red; */
+     background-color: red; 
 }
 
 /* ΠΟΥΛΙΑ */
