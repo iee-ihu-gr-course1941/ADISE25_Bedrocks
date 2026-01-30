@@ -1,108 +1,62 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Παιχνίδι Πλακωτό - ΑΔΙΣΕ">
-  <meta name="author" content="">
-  <title>ΑΔΙΣΕ: Πλακωτό</title>
-
-  <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
-  <link href="css/backgammon.css" rel="stylesheet"> 
-  
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="bootstrap/jquery-3.2.1.min.js"></script>
-  <script src="bootstrap/bootstrap.min.js"></script>
-  <script src="js/plakoto.js"></script>
+    <meta charset="UTF-8">
+    <title>Plakoto Online Multiplayer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <div class="container text-center">
-    <h1 class="mt-4">ΠΛΑΚΩΤΟ</h1>
-    
-    <!-- <div id='backgammon_board' class="mx-auto"> -->
-    <div id='backgammon_board' class="mx-auto">
-    <div id="visual_board">
+
+    <div id="setup-modal" class="modal">
+        <div class="modal-content">
+            <h2>🎲 Plakoto Online</h2>
+            <p>Παίξε με φίλο από άλλο υπολογιστή</p>
+            
+            <hr style="width:100%; border:0; border-top:1px solid #555;">
+
+            <button onclick="createGame()" style="background:#27ae60;">Δημιουργία Νέου (Είμαι ο Host)</button>
+            
+            <p>- Ή -</p>
+
+            <input type="number" id="join-id" placeholder="ID Παιχνιδιού (π.χ. 1)" style="text-align:center;">
+            <button onclick="joinGame()" style="background:#2980b9;">Σύνδεση σε υπάρχον</button>
+        </div>
+    </div>
+
+    <div id="game-ui" style="display:none; height: 100%;">
         
-        <div class="quadrant top-left">
-            <div id="pos_13" class="board-slot top"></div>
-            <div id="pos_14" class="board-slot top"></div>
-            <div id="pos_15" class="board-slot top"></div>
-            <div id="pos_16" class="board-slot top"></div>
-            <div id="pos_17" class="board-slot top"></div>
-            <div id="pos_18" class="board-slot top"></div>
+        <div class="header-info">
+            <div style="text-align:left;">
+                <span id="my-role-badge" style="background:#555; padding:2px 5px; font-size:12px; border-radius:3px;">ΘΕΑΤΗΣ</span>
+                <br>
+                <strong id="turn-indicator">Αναμονή...</strong>
+            </div>
+
+            <span id="message-area" style="color: #f1c40f; font-weight: bold; font-size:14px;"></span>
+
+            <div style="display: flex; gap: 5px; align-items:center;">
+                <button id="btn-roll" onclick="rollDice()">🎲 Ζάρια</button>
+                <span id="die1" class="die">-</span>
+                <span id="die2" class="die">-</span>
+            </div>
+            
+            <div style="font-size:12px; color:#aaa;">
+                Game ID: <strong id="display-game-id" style="color:white; font-size:14px;">-</strong>
+            </div>
         </div>
 
-        <div class="quadrant top-right">
-            <div id="pos_19" class="board-slot top"></div>
-            <div id="pos_20" class="board-slot top"></div>
-            <div id="pos_21" class="board-slot top"></div>
-            <div id="pos_22" class="board-slot top"></div>
-            <div id="pos_23" class="board-slot top"></div>
-            <div id="pos_24" class="board-slot top"></div>
+        <div class="board-wrapper">
+            <div class="board" id="board-container">
+                <div class="half-board top">
+                    <div class="point" id="pos-13"></div><div class="point" id="pos-14"></div><div class="point" id="pos-15"></div><div class="point" id="pos-16"></div><div class="point" id="pos-17"></div><div class="point" id="pos-18"></div><div class="point" id="pos-19"></div><div class="point" id="pos-20"></div><div class="point" id="pos-21"></div><div class="point" id="pos-22"></div><div class="point" id="pos-23"></div><div class="point" id="pos-24"></div>
+                </div>
+                <div class="half-board bottom">
+                    <div class="point" id="pos-12"></div><div class="point" id="pos-11"></div><div class="point" id="pos-10"></div><div class="point" id="pos-9"></div><div class="point" id="pos-8"></div><div class="point" id="pos-7"></div><div class="point" id="pos-6"></div><div class="point" id="pos-5"></div><div class="point" id="pos-4"></div><div class="point" id="pos-3"></div><div class="point" id="pos-2"></div><div class="point" id="pos-1"></div>
+                </div>
+            </div>
         </div>
-<!-- kolitsis 24-66 -->
-
-        <div class="quadrant bottom-left">
-            <div id="pos_12" class="board-slot bottom"></div>
-            <div id="pos_11" class="board-slot bottom"></div>
-            <div id="pos_10" class="board-slot bottom"></div>
-            <div id="pos_9"  class="board-slot bottom"></div>
-            <div id="pos_8"  class="board-slot bottom"></div>
-            <div id="pos_7"  class="board-slot bottom"></div>
-        </div>
-
-        <div class="quadrant bottom-right">
-            <div id="pos_6" class="board-slot bottom"></div>
-            <div id="pos_5" class="board-slot bottom"></div>
-            <div id="pos_4" class="board-slot bottom"></div>
-            <div id="pos_3" class="board-slot bottom"></div>
-            <div id="pos_2" class="board-slot bottom"></div>
-            <div id="pos_1" class="board-slot bottom"></div>
-        </div>
-        
-    </div>
-</div>
-    <!-- </div> -->
-
-    <div id='dice_area' class="my-3">
-        <span id='dice1' class="badge badge-secondary" style="font-size: 2em;">-</span>
-        <span id='dice2' class="badge badge-secondary" style="font-size: 2em;">-</span>
-       <button id='roll_dice' class='btn btn-success ml-3' disabled>ΡΙΞΕ ΖΑΡΙΑ</button>
     </div>
 
-    <div id='game_initializer' class="card p-3 my-3">
-      <h3>Σύνδεση Παίκτη</h3>
-      <div class="form-inline justify-content-center">
-        <input id='username' class="form-control mr-2" placeholder="Όνομα Χρήστη"> 
-        <select id='pcolor' class="form-control mr-2">
-            <option value='W'>Λευκά (W)</option>
-            <option value='B'>Μαύρα (B)</option>
-        </select>
-        <button id='plakoto_login' class='btn btn-primary'>ΕΙΣΟΔΟΣ ΣΤΟ ΠΑΙΧΝΙΔΙ</button>
-      </div>
-    </div>
-    
-    <div id='game_info' class="alert alert-info">
-        Περιμένοντας παίκτες...
-    </div>
-
-    <div id='move_div' class="card p-3 my-3">
-      <h4>Κίνηση Πουλιού</h4>
-      <div class="form-inline justify-content-center">
-        Από Θέση (1-24): <input type="number" id='the_move_src' class="form-control mx-2" min="1" max="24" style="width: 80px;">
-        Προς Θέση: 
-        <select id='the_move_dest' class="form-control mx-2">
-            </select>
-        <button id='do_move' class='btn btn-primary'>ΚΑΝΕ ΤΗΝ ΚΙΝΗΣΗ</button>
-      </div>
-    </div>  
-
-    <div class="mb-5">
-        <button id='refresh_board' class='btn btn-info'>Ανανέωση Ταμπλό</button>
-        <button id='plakoto_reset' class='btn btn-warning'>Επανεκκίνηση Παιχνιδιού</button>
-    </div>
-  </div>
-
+    <script src="script.js"></script>
 </body>
 </html>
