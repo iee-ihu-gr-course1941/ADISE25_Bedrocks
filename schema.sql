@@ -1,4 +1,4 @@
--- 1. Setup the main board
+-- A. Setup the main board
 DROP TABLE IF EXISTS `board`;
 CREATE TABLE `board` (
   `pos` tinyint(4) NOT NULL,           
