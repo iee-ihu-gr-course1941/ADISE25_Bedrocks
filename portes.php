@@ -74,20 +74,11 @@ function handle_position($method, $pos, $input) {
 }
 
 function handle_player($method, $p, $input) {
-    $b=array_shift($p);
+    $b = array_shift($p);
     switch ($b) {
-        case '':
-        case null: 
-            if($method=='GET') {
-                show_users($method);
-            } else {
-                header("HTTP/1.1 400 Bad Request"); 
-                print json_encode(['errormesg'=>"Method $method not allowed here."]);
-            }
-            break;
         case 'B': 
         case 'W': 
-            
+            // Επιτρέπουμε και POST για συμβατότητα με τον server
             if($method == 'PUT' || $method == 'POST') {
                 handle_user($method, $b, $input);
             } else {
@@ -96,7 +87,6 @@ function handle_player($method, $p, $input) {
             break;
         default: 
             header("HTTP/1.1 404 Not Found");
-            print json_encode(['errormesg'=>"Player $b not found."]);
             break;
     }
 }
