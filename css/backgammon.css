@@ -63,7 +63,9 @@
 /* Αλλαγή: Βάζουμε flex-start για να πατάνε κάτω */
 .board-slot.bottom { 
     justify-content: flex-start; 
-    flex-direction: column-reverse; 
+    flex-direction: column-reverse;
+    
+    background-color: red;
 }
 
 /* ΠΟΥΛΙΑ */
