@@ -28,7 +28,7 @@
     row-gap: 50px; 
     
     
-    padding: 27px 152px; 
+    padding: 55px 152px; /* 27 ηταν */
     
     box-sizing: border-box;
 
@@ -65,7 +65,7 @@
     justify-content: flex-start; 
     flex-direction: column-reverse;
     
-    background-color: red;
+    /* background-color: red; */
 }
 
 /* ΠΟΥΛΙΑ */
